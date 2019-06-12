@@ -1,9 +1,4 @@
-let main = document.querySelector("#main");
-
-function writeToBody(message) {
-
-    main.innerHTML += (message + `<br />`);
-}
+import {writeToBody} from './WriteToBody.js';
 
 // Observable
 const observable = (observer) => {
@@ -24,7 +19,7 @@ const observable = (observer) => {
         }    
         
         i++
-    }, 100);
+    }, 1000);
 
     return () => { 
 
@@ -44,4 +39,4 @@ let observer = {
 // Subscribe
 var teardown = observable(observer);
 
-setTimeout(teardown, 2000);
+setTimeout(teardown, 20000);

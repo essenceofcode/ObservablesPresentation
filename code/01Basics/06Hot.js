@@ -1,36 +1,29 @@
-let main = document.querySelector("#main");
-
-function writeToBody(message) {
-
-    main.innerHTML += (message + `<br />`);
-}
+import {writeToBody} from './WriteToBody.js';
 
 let i = 0;
 i++;
+let observers = []
 
 // Observable
-const observable = (observers) => {
-
-    let numValues = 0;
+const observable = () => {
 
     // Producer
     var intervalId = setInterval(() => {
 
-        if (numValues === 10) {            
-            clearInterval(intervalId);   
-            
-            observers.forEach((observer) => {
-                observer.complete();
-            });
-        } 
-
         observers.forEach((observer) => {
-            observer.next(`${i}`);
-        });       
-       
-        i++;
-        numValues++;
-    }, 100);
+
+            if (i > 20) {            
+                clearInterval(intervalId);   
+                
+                observer.complete();
+            } else {
+    
+                observer.next(`${i}`);
+            }
+            
+            i++;
+        })
+    }, 1000);
 
     return () => { clearInterval(intervalId); }
 }
@@ -44,4 +37,11 @@ let observer = {
 }
 
 // Subscribe
-observable([observer, observer, observer, observer, observer]);
+observers.push(observer);
+
+
+observable();
+
+setTimeout(() => {
+    writeToBody('New Observer Starting');
+    observers.push(observer)}, 10000);

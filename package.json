@@ -1,0 +1,19 @@
+{
+  "name": "observablespresentation",
+  "version": "1.0.0",
+  "description": "Presentation on Observables",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidbwilson/ObservablesPresentation.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidbwilson/ObservablesPresentation/issues"
+  },
+  "homepage": "https://github.com/davidbwilson/ObservablesPresentation#readme"
+}

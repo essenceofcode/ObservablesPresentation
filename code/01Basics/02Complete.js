@@ -1,9 +1,4 @@
-let main = document.querySelector("#main");
-
-function writeToBody(message) {
-
-    main.innerHTML += (message + `<br />`);
-}
+import {writeToBody} from './WriteToBody.js';
 
 // Observable
 const observable = (observer) => {
@@ -15,13 +10,13 @@ const observable = (observer) => {
 
         observer.next(i);
 
-        if (i === 30) {
+        if (i === 10) {
             observer.complete();
             clearInterval(intervalId);            
         } 
         
         i++;
-    }, 100)
+    }, 1000)
 }
 
 // Observer

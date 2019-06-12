@@ -1,13 +1,11 @@
 import {writeToBody} from './WriteToBody.js';
 
-// Observable
-const observable = (observer) => {
-
+// Producer
+const producer = (observer) => {
+    
     let i = 0;
 
-    // Producer
-    var intervalId = setInterval(() => {
-
+    let intervalId = setInterval(() => {
         if (i % 2) {
             observer.next(i);
         } else {
@@ -19,8 +17,26 @@ const observable = (observer) => {
             clearInterval(intervalId);            
         }    
         
-        i++;
-    }, 100)
+        i++
+    }, 100);
+
+    return () => { 
+
+        clearInterval(intervalId); 
+        writeToBody('Teardown Complete');
+    }
+}
+
+// Observable
+class Observable {
+
+    constructor(producer) {
+        this.producer = producer;
+    }
+
+    subscribe(observer) {     
+        return this.producer(observer);
+    }
 }
 
 // Observer
@@ -31,5 +47,8 @@ let observer = {
     complete: () => { writeToBody(`I finished!`)}
 }
 
+// Setup
+let observable = new Observable(producer);
+
 // Subscribe
-observable(observer);
+observable.subscribe(observer);

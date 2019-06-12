@@ -1,9 +1,4 @@
-let main = document.querySelector("#main");
-
-function writeToBody(message) {
-
-    main.innerHTML += (message + `<br />`);
-}
+import {writeToBody} from './WriteToBody.js';
 
 // Observable
 const observable = (observer, name) => {
@@ -21,7 +16,7 @@ const observable = (observer, name) => {
         observer.next(`${name}: ${i}`);
        
         i++;
-    }, 100);
+    }, 1000);
 
     return () => { clearInterval(intervalId); }
 }

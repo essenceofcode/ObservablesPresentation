@@ -1,9 +1,4 @@
-let main = document.querySelector("#main");
-
-function writeToBody(message) {
-
-    main.innerHTML += (message + `<br />`);
-}
+import {writeToBody} from './WriteToBody.js';
 
 // Observable
 const observable = (observer) => {
@@ -12,11 +7,8 @@ const observable = (observer) => {
 
     // Producer
     var intervalId = setInterval(() => {
-        if (i % 2) {
-            observer.next(i);
-        } else {
-            observer.error(`ERROR: The number ${i} is not odd!`);
-        }
+
+        observer.next(i);
         
         if (i === 30) {
             observer.complete();
@@ -24,7 +16,7 @@ const observable = (observer) => {
         }    
         
         i++
-    }, 100);
+    }, 1000);
 
     return () => { 
 
@@ -41,7 +33,20 @@ let observer = {
     complete: () => { writeToBody(`I finished!`)}
 }
 
-// Subscribe
-var teardown = observable(observer);
+// Operator
+let filter = (callback, observable) => {
+    return function (observer) {
+        return observable({
+            next(value) { if (callback(value)) observer.next(value); },
+            error(error) { observer.error(error); },
+            complete() { observer.complete(); }
+        })
+    }
+}
 
-setTimeout(teardown, 2000);
+let filteredObservable = filter((val) => !!(val % 2), observable);
+
+// Subscribe
+let teardown = filteredObservable(observer);
+
+setTimeout(teardown, 20000);

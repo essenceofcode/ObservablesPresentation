@@ -1,28 +1,24 @@
-let main = document.querySelector("#main");
-
-function writeToBody(message) {
-
-    main.innerHTML += (message + `<br />`);
-}
+import {writeToBody} from './WriteToBody.js';
 
 // Observable
-const observable = (observer) => {
+const observable = observer => {
 
     let i = 0;
 
-    // Producer
     var intervalId = setInterval(() => {
 
         observer.next(i);
         i++;
-    }, 100);    
+    }, 1000);    
 }
 
 // Observer
 let observer = {
 
-    next: (i) => { writeToBody(`interval ${i}`) }
+    next: i => { writeToBody(`interval ${i}`) }
 }
 
 // Subscribe
 observable(observer);
+
+// Operator
