@@ -13,19 +13,20 @@ const processInput = pipe(
 
 let $images = fromEvent(document.querySelector('#text-input'), 'keyup')
     .pipe(
-        pluck('target', 'value'),
-        filter((searchText: string) => searchText.length > 3),
         debounceTime(500),
+        pluck('target', 'value'),
+        filter((searchText: string) => searchText.length > 3),        
         distinctUntilChanged(),
-        tap(val => { enableSpinner(); }),
+        tap(() => { enableSpinner(); }),
         switchMap(text => fromFetch(`https://images-api.nasa.gov/search?q=${text}`)),    
+        tap(() => clearBody()),
         tap(() => disableSpinner() ),
         filter(response => response.status === 200),
         switchMap(response => response.json()),
         tap(collection => {
             if (collection.collection.metadata.total_hits === 0) writeToBody('No results');
         }),
-        flatMap(response => response.collection.items),   
+        flatMap(json => json.collection.items),   
         flatMap(items => items.links), 
         filter(link => (link.render === 'image')),
         pluck('href'))

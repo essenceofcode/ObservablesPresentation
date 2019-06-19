@@ -1,52 +1,55 @@
 import {writeToBody} from './WriteToBody.js';
 
-// Observable
-const observable = (observer) => {
+class Observable {
 
-    let i = 0;
-
-    // Producer
-    var intervalId = setInterval(() => {
-
-        observer.next(i);
+    constructor() {
         
-        if (i === 30) {
-            observer.complete();
-            clearInterval(intervalId);            
-        }    
+        this.producer = (observer) => {
+    
+            let i = 0;
         
-        i++
-    }, 1000);
+            this.intervalId = setInterval(() => observer.next(i++), 1000);
+        };
 
-    return () => { 
+        this.teardown = () => {             
+            clearInterval(this.intervalId); 
+            writeToBody('Teardown Complete');
+        }
+    }
 
-        clearInterval(intervalId); 
-        writeToBody('Teardown Complete');
+    subscribe = (observer) => {     
+        this.producer(observer);
+
+        return this;
+    }
+
+    unsubscribe = () => {
+        this.teardown();
+    }
+
+    filter(callback) {
+        let currentProducer = this.producer;
+
+        this.producer = (observer) => {
+            return currentProducer({
+                next(value) { if (callback(value)) observer.next(value); },
+                error(error) { observer.error(error); },
+                complete() { observer.complete(); }
+            })
+        }
+
+        return this;
     }
 }
 
-// Observer
-let observer = {
+const myObservable = new Observable()
+    .filter(val => !(val % 2))
+    .filter(val => (val !== 4))
+    .subscribe({
 
-    next: (i) => { writeToBody(`interval ${i}`) },
-    error: (err) => { writeToBody(`error: ${err}`); },
-    complete: () => { writeToBody(`I finished!`)}
-}
+        next: (i) => { writeToBody(`interval ${i}`) },
+        error: (err) => { writeToBody(`error: ${err}`); },
+        complete: () => { writeToBody(`I finished!`)}
+    });
 
-// Operator
-let filter = (callback, observable) => {
-    return function (observer) {
-        return observable({
-            next(value) { if (callback(value)) observer.next(value); },
-            error(error) { observer.error(error); },
-            complete() { observer.complete(); }
-        })
-    }
-}
-
-let filteredObservable = filter((val) => !!(val % 2), observable);
-
-// Subscribe
-let teardown = filteredObservable(observer);
-
-setTimeout(teardown, 20000);
+setTimeout(myObservable.unsubscribe, 10000);

@@ -1,16 +1,20 @@
 import {writeToBody} from './WriteToBody.js';
 
-// Observable
+const observer = {
+
+    next: (i) => { writeToBody(`interval ${i}`) },
+    complete: () => { writeToBody(`I'm Complete!`)}
+}
+
 const observable = (observer) => {
 
     let i = 0;
 
-    // Producer
     var intervalId = setInterval(() => {
 
         observer.next(i);
 
-        if (i === 10) {
+        if (i > 10) {
             observer.complete();
             clearInterval(intervalId);            
         } 
@@ -19,12 +23,4 @@ const observable = (observer) => {
     }, 1000)
 }
 
-// Observer
-let observer = {
-
-    next: (i) => { writeToBody(`interval ${i}`) },
-    complete: () => { writeToBody(`I'm Complete!`)}
-}
-
-// Subscribe
 observable(observer);

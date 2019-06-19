@@ -1,11 +1,17 @@
 import {writeToBody} from './WriteToBody.js';
 
-// Observable
+
+let observer = {
+
+    next: (i) => { writeToBody(`interval ${i}`) },
+    error: (err) => { writeToBody(`error: ${err}`); },
+    complete: () => { writeToBody(`I finished!`)}
+}
+
 const observable = (observer) => {
 
     let i = 0;
 
-    // Producer
     var intervalId = setInterval(() => {
         if (i % 2) {
             observer.next(i);
@@ -28,15 +34,14 @@ const observable = (observer) => {
     }
 }
 
-// Observer
-let observer = {
 
-    next: (i) => { writeToBody(`interval ${i}`) },
-    error: (err) => { writeToBody(`error: ${err}`); },
-    complete: () => { writeToBody(`I finished!`)}
-}
-
-// Subscribe
-var teardown = observable(observer);
+// subscription of an observable usually returns a method that
+// can unsubscriber or run a dispose / teardown
+// This allows the caller to decide when it's done with the
+// observable.
+let teardown = observable(observer);
 
 setTimeout(teardown, 20000);
+
+
+// That's it.  that's the basic building blocks of observables.

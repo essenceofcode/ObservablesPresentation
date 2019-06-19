@@ -1,37 +1,35 @@
-import {writeToBody} from './WriteToBody.js';
+import { writeToId} from './WriteToBody.js';
 
-// Observable
-const observable = (observer, name) => {
-
+const observable = (id, observer) => {
     let i = 0;
+    
+    const intervalId = setInterval(() => { 
 
-    // Producer
-    var intervalId = setInterval(() => {
+        observer.next(`${name}: ${i++}`);
+    }, 1000);    
 
-        if (i === 10) {
-            observer.complete();
-            clearInterval(intervalId);            
-        } 
-
-        observer.next(`${name}: ${i}`);
-       
-        i++;
-    }, 1000);
-
-    return () => { clearInterval(intervalId); }
+    return () => {
+        clearInterval(intervalId);
+        writeToId(id, 'Teardown complete!')
+    }
 }
 
-// Observer
-let observer = {
+// every time someone subscribes to a cold observable, the same
+// set of values are reproduced
+// Cold observables are also unicast (one observer).
+const teardownOne = observable('#observer-one', {
+    next: i => writeToId('#observer-one', `interval ${i}`),
+    error: err => writeToId('#observer-one', `error: ${err}` ),
+    complete: msg => writeToId('#observer-one', `Completed`)
+});
 
-    next: (i) => { writeToBody(`${i}`) },
-    error: (err) => { writeToBody(`error: ${err}`); },
-    complete: () => { writeToBody(`I finished!`)}
-}
+setTimeout(teardownOne, 15000)
 
-// Subscribe
-observable(observer, 'first');
-observable(observer, 'second');
-observable(observer, 'third');
-observable(observer, 'fourth');
-observable(observer, 'fifth');
+setTimeout(() => {
+    const teardownTwo = observable('#observer-two', {
+        next: i => writeToId('#observer-two', `interval ${i}`),
+        error: err => writeToId('#observer-two',`error: ${err}` ),
+        complete: msg => writeToId('#observer-two',`Completed`)
+    });
+    setTimeout(teardownTwo, 15000)
+}, 5000)

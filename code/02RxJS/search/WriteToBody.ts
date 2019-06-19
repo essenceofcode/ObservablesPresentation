@@ -1,5 +1,5 @@
 let main = document.querySelector("#main");
-let spinner = document.querySelector("#spinner");
+let spinner:any = document.querySelector("#spinner");
 
 export function writeToBody(message: string) {
 
@@ -11,13 +11,9 @@ export function clearBody(){
 }
 
 export function enableSpinner(){
-    spinner = document.querySelector("#spinner");
     spinner.style.visibility = '';
-
-    clearBody();
 }
 
 export function disableSpinner(){
-    spinner = document.querySelector("#spinner");
     spinner.style.visibility = 'hidden';
 }
