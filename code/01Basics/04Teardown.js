@@ -13,7 +13,7 @@ const observable = (observer) => {
     let i = 0;
 
     var intervalId = setInterval(() => {
-        if (i % 2) {
+        if ((i % 2) === 1) {
             observer.next(i);
         } else {
             observer.error(`ERROR: The number ${i} is not odd!`);
@@ -39,9 +39,9 @@ const observable = (observer) => {
 // can unsubscriber or run a dispose / teardown
 // This allows the caller to decide when it's done with the
 // observable.
-let teardown = observable(observer);
+let unsubscribe = observable(observer);
 
-setTimeout(teardown, 20000);
+setTimeout(unsubscribe, 20000);
 
 
 // That's it.  that's the basic building blocks of observables.

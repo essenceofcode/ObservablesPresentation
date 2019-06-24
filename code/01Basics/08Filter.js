@@ -27,7 +27,7 @@ class Observable {
         this.teardown();
     }
 
-    filter(callback) {
+    filter = (callback) => {
         let currentProducer = this.producer;
 
         this.producer = (observer) => {

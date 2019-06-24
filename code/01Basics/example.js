@@ -1,4 +1,4 @@
-import { writeToBody } from './WriteToBody.js';
+import {writeToBody} from './WriteToBody.js';
 
 class Observable {
 
@@ -27,7 +27,7 @@ class Observable {
         this.teardown();
     }
 
-    filter(callback) {
+    filter = (callback) => {
         let currentProducer = this.producer;
 
         this.producer = (observer) => {

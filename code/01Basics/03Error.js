@@ -13,7 +13,7 @@ const observable = (observer) => {
 
     var intervalId = setInterval(() => {
 
-        if (i % 2) {
+        if ((i % 2) === 1) {
             observer.next(i);
         } else {
             observer.error(`ERROR: The number ${i} is not odd!`);

@@ -14,7 +14,7 @@ const observable = (observer) => {
 
         observer.next(i);
 
-        if (i > 10) {
+        if (i === 10) {
             observer.complete();
             clearInterval(intervalId);            
         } 

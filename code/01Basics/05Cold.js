@@ -17,19 +17,19 @@ const observable = (id, observer) => {
 // every time someone subscribes to a cold observable, the same
 // set of values are reproduced
 // Cold observables are also unicast (one observer).
-const teardownOne = observable('#observer-one', {
+const unsubscribeOne = observable('#observer-one', {
     next: i => writeToId('#observer-one', `interval ${i}`),
     error: err => writeToId('#observer-one', `error: ${err}` ),
     complete: msg => writeToId('#observer-one', `Completed`)
 });
 
-setTimeout(teardownOne, 15000)
+setTimeout(unsubscribeOne, 15000)
 
 setTimeout(() => {
-    const teardownTwo = observable('#observer-two', {
+    const unsubscribeTwo = observable('#observer-two', {
         next: i => writeToId('#observer-two', `interval ${i}`),
         error: err => writeToId('#observer-two',`error: ${err}` ),
         complete: msg => writeToId('#observer-two',`Completed`)
     });
-    setTimeout(teardownTwo, 15000)
+    setTimeout(unsubscribeTwo, 15000)
 }, 5000)
